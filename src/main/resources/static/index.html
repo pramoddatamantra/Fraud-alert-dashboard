@@ -1,0 +1,107 @@
+<html>
+
+<head>
+    <title>Fraud Alert Monitoring Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center">
+                Fraud Alert Monitoring Dashboard
+            </h2>
+        </div>
+    </div>
+    <br>
+
+    <div class="row">
+        <!--<div class="col-md-12">-->
+        <div class="table-responsive-lg">
+            <table class="table table-bordered table-condensed table-hover outerTable">
+                <thead>
+                <tr>
+                    <th>cc_num</th>
+                    <th>trans_time</th>
+                    <th>trans_num</th>
+                    <th>category</th>
+                    <th>merchant</th>
+                    <th>amt</th>
+                    <th>distance</th>
+                    <th>age</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+
+
+                    <td>
+                        <div id="fraud_alert">
+                            <table class="table table-bordered table-condensed table-hover innerTable">
+                                <tr>
+                                    <thead>
+                                    </thead>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="js/sockjs-1.1.1.min.js"></script>
+<script type="text/javascript" src="js/stomp.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+`
+<script type="text/javascript" src="js/Chart.min.js"></script>
+
+<script type="text/javascript">
+	
+			//tables
+			var fraudAlertList = jQuery("#fraud_alert");
+
+			//use sockjs			
+			var socket = new SockJS('/stomp');
+			var stompClient = Stomp.over(socket);
+			var t_tabl_start = "<table class='table table-bordered table-condensed table-hover innerTable'><thead><tr><th>cc_num</th><th>trans_time</th><th>trans_num</th><th>category</th><th>merchant</th><th>amt</th><th>distance</th><th>age</th></tr></thead>";
+					var t_tabl_body_start = "<body>";
+					var t_tabl_body_end = "</body>";
+					var t_tabl_end = "</table>";
+				fraudAlertList.html(t_tabl_body_start);
+            stompClient.connect({ }, function(frame) {
+				//subscribe "/topic/fraudData" message
+			//	var t_tabl_start = "<table class='table table-bordered table-condensed table-hover innerTable'><thead><tr><th>cc_num</th><th>trans_time</th><th>trans_num</th><th>category</th><th>merchant</th><th>amt</th><th>distance</th><th>age</th></tr></thead>";
+				//	var t_tabl_body_start = "<body>";
+				//	var t_tabl_body_end = "</body>";
+				//	var t_tabl_end = "</table>";
+				//fraudAlertList.html(t_tabl_start+t_tabl_body_start);
+				stompClient.subscribe("/topic/fraudData", function(data) {
+					var dataList = data.body;
+					var resp=jQuery.parseJSON(dataList);
+					//Fraud data
+					var totalOutput='';
+					jQuery.each(resp.fraudAlert, function(i,vh) {
+						 totalOutput +="<tr><td>"+ vh.cc_num+"</td><td>"+vh.trans_time+"</td><td>"+vh.trans_num+"</td><td>"+ vh.category+"</td><td>"+vh.merchant+"</td><td>"+vh.amt+"</td><td>"+vh.distance+"</td><td>"+vh.age+"</td></tr>";
+					});
+					var t_tabl_start = "<table class='table table-bordered table-condensed table-hover innerTable'><thead><tr><th>cc_num</th><th>trans_time</th><th>trans_num</th><th>category</th><th>merchant</th><th>amt</th><th>distance</th><th>age</th></tr></thead>";
+					var t_tabl_end = "</table>";
+				 $("table tbody").append(totalOutput);
+					fraudAlertList.html(t_tabl_body_end+t_tabl_end);
+
+				});
+				//fraudAlertList.html(t_tabl_end);
+            });
+
+		
+
+
+
+</script>
+</body>
+</html>

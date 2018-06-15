@@ -1,0 +1,52 @@
+.table {
+    table-layout:fixed;
+}
+
+.table td {
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.outerTable {
+    table-layout: fixed;
+    width:100%
+    border: 2px solid black;
+}
+
+.outerTable th {
+    text-align: center;
+    background-color: rgb(194, 70, 54);
+    color: rgb(227, 227, 233);
+}
+
+.outerTable>thead>tr>th {
+    border: 1px solid black;
+}
+
+.innerTable {
+width:100%
+    table-layout: fixed;
+}
+
+.innerTable th {
+    text-align: center;
+    background-color: #4CAF50;
+    color: white; 
+}
+
+.innerTable tr {
+    text-align: center;
+}
+
+.innerTable>tbody>tr>td {
+    font-family:Arial-Black;
+}
+
+.innerTable>tbody:nth-of-type(odd){
+	background-color: #B6EA7D;
+}
+
+.innerTable>tbody:nth-of-type(even){
+	background-color: #BFEAA3;
+}
